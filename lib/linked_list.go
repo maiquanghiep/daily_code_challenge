@@ -7,32 +7,32 @@ import (
 )
 
 type Node struct {
-	val  int
-	next *Node
+	Val  int
+	Next *Node
 }
 
 type List struct {
-	head *Node
+	Head *Node
 }
 
 func NewList(v int) *List {
-	n := Node{val: v}
-	return &List{head: &n}
+	n := Node{Val: v}
+	return &List{Head: &n}
 }
 
 func (l *List) String() string {
-	if l.head == nil {
+	if l.Head == nil {
 		return fmt.Sprintf("")
 	}
-	current := l.head
+	current := l.Head
 	result := make([]string, 0)
 	for {
-		text := strconv.Itoa(current.val)
+		text := strconv.Itoa(current.Val)
 		result = append(result, text)
-		if current.next == nil {
+		if current.Next == nil {
 			break
 		}
-		current = current.next
+		current = current.Next
 	}
 
 	return fmt.Sprintf(strings.Join(result, "->"))
@@ -41,12 +41,12 @@ func (l *List) String() string {
 func (l *List) toString() string {
 	var sb strings.Builder
 
-	if l.head != nil {
-		current := l.head
+	if l.Head != nil {
+		current := l.Head
 		for current != nil {
-			text := strconv.Itoa(current.val)
+			text := strconv.Itoa(current.Val)
 			sb.WriteString(text)
-			current = current.next
+			current = current.Next
 		}
 	}
 
@@ -54,40 +54,40 @@ func (l *List) toString() string {
 }
 
 func (l *List) AddFront(v int) {
-	n := Node{val: v}
-	if l.head == nil {
-		l.head = &n
+	n := Node{Val: v}
+	if l.Head == nil {
+		l.Head = &n
 	} else {
-		n.next = l.head
-		l.head = &n
+		n.Next = l.Head
+		l.Head = &n
 	}
 }
 
 func (l *List) AddTail(v int) {
-	n := Node{val: v}
-	if l.head == nil {
-		l.head = &n
+	n := Node{Val: v}
+	if l.Head == nil {
+		l.Head = &n
 	} else {
-		current := l.head
-		for current.next != nil {
-			current = current.next
+		current := l.Head
+		for current.Next != nil {
+			current = current.Next
 		}
-		current.next = &n
+		current.Next = &n
 	}
 }
 
 func (l *List) Reverse() error {
-	if l.head == nil {
+	if l.Head == nil {
 		return fmt.Errorf("TranverseError: List is empty")
 	}
 	var prev *Node
-	current := l.head
+	current := l.Head
 	for current != nil {
-		nextNode := current.next
-		current.next = prev
+		NextNode := current.Next
+		current.Next = prev
 		prev = current
-		current = nextNode
+		current = NextNode
 	}
-	l.head = prev
+	l.Head = prev
 	return nil
 }
