@@ -6,21 +6,21 @@ import (
 )
 
 func TestPalindromeSpecialCase(t *testing.T) {
-	// l := linkedlist.NewList(1)
-	// l.AddTail(2)
+	l := linkedlist.NewList(1)
+	l.AddTail(2)
 
-	// c := isPalindrome(l.Head)
-	// if c {
-	// 	t.Errorf("Expected False, but got %t", c)
-	// }
+	c := isPalindrome(l.Head)
+	if c {
+		t.Errorf("Expected False, but got %t", c)
+	}
 
-	// l1 := linkedlist.NewList(1)
-	// l1.AddTail(1)
+	l1 := linkedlist.NewList(1)
+	l1.AddTail(1)
 
-	// c = isPalindrome(l1.Head)
-	// if !c {
-	// 	t.Errorf("Expected True, but got %t", c)
-	// }
+	c = isPalindrome(l1.Head)
+	if !c {
+		t.Errorf("Expected True, but got %t", c)
+	}
 }
 
 func TestPalindrome(t *testing.T) {
