@@ -91,3 +91,17 @@ func (l *List) Reverse() error {
 	l.Head = prev
 	return nil
 }
+
+func (n *Node) TraverseNodeToString() string {
+	cur := n
+	vals := make([]string, 0)
+	for cur != nil {
+		vals = append(vals, strconv.Itoa(cur.Val))
+		cur = cur.Next
+	}
+
+	var sb strings.Builder
+	sb.WriteString(strings.Join(vals, "->"))
+
+	return sb.String()
+}
