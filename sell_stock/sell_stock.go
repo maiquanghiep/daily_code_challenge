@@ -1,6 +1,9 @@
 package sellstock
 
-import "math"
+import (
+	"math"
+	"strconv"
+)
 
 /*
 Say you have an array for which the ith element is the price of a given stock on day i.
@@ -57,5 +60,36 @@ func maxProfit2(prices []int) int {
 			}
 		}
 	}
+	return result
+}
+
+/*
+Say you have an array for which the ith element is the price of a given stock on day i.
+
+Design an algorithm to find the maximum profit. You may complete at most two transactions.
+
+Note: You may not engage in multiple transactions at the same time (i.e., you must sell the stock before you buy again).
+*/
+func findProfit3(prices []int, pos int, t int, bought int, memo map[string]int) int {
+	if pos == len(prices) || t == 0 {
+		return 0
+	}
+
+	action := strconv.Itoa(bought) + "," + strconv.Itoa(t) + "," + strconv.Itoa(pos)
+	if v, ok := memo[action]; ok {
+		return v
+	}
+	result := findProfit3(prices, pos+1, t, bought, memo)
+	if bought == 1 {
+		result = findMax(result, findProfit3(prices, pos+1, t-1, 0, memo)+prices[pos])
+	} else {
+		result = findMax(result, findProfit3(prices, pos+1, t, 1, memo)-prices[pos])
+	}
+	memo[action] = result
+	return result
+}
+func maxProfit3(prices []int) int {
+	memo := make(map[string]int)
+	result := findProfit3(prices, 0, 2, 0, memo)
 	return result
 }
