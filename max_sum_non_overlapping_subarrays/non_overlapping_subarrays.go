@@ -1,54 +1,53 @@
 package nonoverlappingsubarrays
 
-import (
-	"strconv"
-)
+/*
+In a given array nums of positive integers, find three non-overlapping subarrays with maximum sum.
 
-func sumAtPos(nums []int, k int, pos int) int {
-	if pos+k > len(nums) {
-		return 0
-	}
+Each subarray will be of size k, and we want to maximize the sum of all 3*k entries.
 
-	var result int
-	for i := 0; i < k; i++ {
-		result += nums[i+pos]
-	}
-	return result
-}
+Return the result as a list of indices representing the starting position of each interval (0-indexed). If there are multiple answers, return the lexicographically smallest one.
+*/
 
-func maxAtPos(nums []int, count int, k int, pos int, memo map[string]int) (int, []int) {
-	if pos+k > len(nums) || count == 0 {
-		return 0, nil
-	}
-
-	key := strconv.Itoa(count) + "," + strconv.Itoa(pos)
-	if v, ok := memo[key]; ok {
-		return v, nil
-	}
-
-	var result int
-
-	array := make([]int, 3)
-	for i := 0; i < k; i++ {
-		maxAt, resultArray := maxAtPos(nums, count-1, k, pos+k+i, memo)
-		if result < sumAtPos(nums, k, pos+i)+maxAt {
-			result = sumAtPos(nums, k, pos+i) + maxAt
-			copy(array, resultArray)
-			array[count-1] = pos + i
+func maxSumOfThreeSubarrays(nums []int, k int) []int {
+	w := make([]int, 0)
+	currSum := 0
+	for i, v := range nums {
+		currSum += v
+		if i >= k {
+			currSum -= nums[i-k]
+		}
+		if i >= k-1 {
+			w = append(w, currSum)
 		}
 	}
 
-	memo[key] = result
-
-	return result, array
-}
-
-func maxSumOfThreeSubarrays(nums []int, k int) []int {
-	memo := make(map[string]int)
-	_, array := maxAtPos(nums, 3, k, 0, memo)
-
-	for i, j := 0, len(array)-1; i < j; i, j = i+1, j-1 {
-		array[i], array[j] = array[j], array[i]
+	left := make([]int, len(w))
+	best := 0
+	for i := range left {
+		if w[i] > w[best] {
+			best = i
+		}
+		left[i] = best
 	}
-	return array
+
+	right := make([]int, len(w))
+	best = len(w) - 1
+	for i := len(w) - 1; i >= 0; i-- {
+		if w[i] >= w[best] {
+			best = i
+		}
+		right[i] = best
+	}
+	ans := []int{-1, -1, -1}
+
+	for j := k; j < len(w)-k; j++ {
+		i, l := left[j-k], right[j+k]
+		if ans[0] == -1 || w[i]+w[j]+w[l] > w[ans[0]]+w[ans[1]]+w[ans[2]] {
+			ans[0] = i
+			ans[1] = j
+			ans[2] = l
+		}
+	}
+
+	return ans
 }
