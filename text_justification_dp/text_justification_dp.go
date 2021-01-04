@@ -1,6 +1,7 @@
 package textjustificationdp
 
 import (
+	"math"
 	"strings"
 )
 
@@ -12,16 +13,9 @@ The word processors like MS Word do task of placing line breaks. The idea is to 
 func calculateCost(c, w int) int {
 	cost := w - c
 	if cost < 0 {
-		return -1
+		return math.MaxInt16
 	}
 	return cost * cost
-}
-
-func min(a, b int) int {
-	if a < b {
-		return a
-	}
-	return b
 }
 
 func minCost(s string, w int) int {
@@ -32,24 +26,31 @@ func minCost(s string, w int) int {
 	}
 
 	for i := range dp {
-		count := 0
+		count := -1
 		for j := i; j < len(texts); j++ {
-			count += len(texts[j]) + j - i
+			count += len(texts[j]) + 1
 			dp[i][j] = calculateCost(count, w)
 		}
 	}
 
+	result := make([]int, len(texts))
+	lineIndexs := make([]int, len(texts))
 	for i := len(texts) - 1; i >= 0; i-- {
-		minCost := dp[i][i]
-		if minCost == -1 {
-			for j := len(texts); j >= i; j-- {
-				if dp[i][j] == -1 {
+		minCost := dp[i][len(texts)-1]
+		newLineIndex := len(texts)
+		if minCost == math.MaxInt16 {
+			for j := len(texts) - 1; j > i; j-- {
+				if dp[i][j-1] == math.MaxInt16 {
 					continue
 				}
-				minCost = min(minCost, dp[i][j] + )
+				if minCost > dp[i][j-1]+result[j] {
+					minCost = dp[i][j-1] + result[j]
+					newLineIndex = j
+				}
 			}
 		}
+		lineIndexs[i] = newLineIndex
+		result[i] = minCost
 	}
-
-	return w
+	return result[0]
 }
